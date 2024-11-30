@@ -11,11 +11,11 @@ namespace CustomLoggingProviderLibrary
         private static string _applicationName;
 
         /// <summary>
-        /// Initializes the global logger for the application.
-        /// Should be called only once at the start of the application.
+        /// Initializes the global logger for the application
+        /// Should be called only once at the start of the application
         /// </summary>
-        /// <param name="applicationName">Name of the application to identify the log.</param>
-        /// <param name="minimumLevel">Minimum log level.</param>
+        /// <param name="applicationName">Name of the application to identify the log</param>
+        /// <param name="minimumLevel">Minimum log level</param>
         public static void Initialize(string applicationName, int minimumLevel)
         {
             _applicationName = applicationName;
@@ -34,30 +34,57 @@ namespace CustomLoggingProviderLibrary
         }
 
         private string FormatLogMessage(string message) =>  $"[{_logLevel}] {_applicationName}: {message}";
-     
-        public void LogInfo(string message) 
+
+        private string FormatLogMessage(string message, string actionName) => $"[{_logLevel}] {_applicationName} - {actionName}: {message}";
+
+        /// <summary>
+        /// Write Info message
+        /// </summary>
+        /// <param name="message">Message for log</param>
+        /// <param name="actioName">Name of the method called</param>
+        public void LogInfo(string message, string actioName = null) 
         {
-            _logger?.LogInformation(FormatLogMessage(message));
+            _logger?.LogInformation(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
         }
 
-        public void LogError(string message)
+        /// <summary>
+        /// Write Error message
+        /// </summary>
+        /// <param name="message">Message for log</param>
+        /// <param name="actioName">Name of the method called</param>
+        public void LogError(string message, string actioName = null)
         {
-            _logger?.LogError(FormatLogMessage(message));
+            _logger?.LogError(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
         }
 
-        public void LogWarning(string message)
+        /// <summary>
+        /// Write Warning message
+        /// </summary>
+        /// <param name="message">Message for log</param>
+        /// <param name="actioName">Name of the method called</param>
+        public void LogWarning(string message, string actioName = null)
         {
-            _logger?.LogWarning(FormatLogMessage(message));
+            _logger?.LogWarning(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
         }
 
-        public void LogDebug(string message)
+        /// <summary>
+        /// Write Debug message
+        /// </summary>
+        /// <param name="message">Message for log</param>
+        /// <param name="actioName">Name of the method called</param>
+        public void LogDebug(string message, string actioName = null)
         {
-            _logger?.LogDebug(FormatLogMessage(message));
+            _logger?.LogDebug(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
         }
 
-        public void LogCritical(string message)
+        /// <summary>
+        /// Write Critical message
+        /// </summary>
+        /// <param name="message">Message for log</param>
+        /// <param name="actioName">Name of the method called</param>
+        public void LogCritical(string message, string actioName = null)
         {   
-            _logger?.LogCritical(FormatLogMessage(message));
+            _logger?.LogCritical(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
         }
     }
 }
