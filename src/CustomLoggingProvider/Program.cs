@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CustomLoggingProviderLibrary;
+using System;
 
 namespace CustomLoggingProvider
 {
@@ -10,6 +7,11 @@ namespace CustomLoggingProvider
     {
         static void Main(string[] args)
         {
+            LoggerEventProvider.Initialize("CustomLoggingProvider", 9);
+            var _logger = new LoggerEventProvider();
+
+            _logger.LogInfo("Test message for logger");
+
             Console.WriteLine("Hello World");
             Console.ReadLine();           
         }
