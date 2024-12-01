@@ -79,6 +79,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CustomLoggingProviderDomain\CustomLoggingProviderDomain.csproj">
+      <Project>{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}</Project>
+      <Name>CustomLoggingProviderDomain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CustomLoggingProviderLibrary\CustomLoggingProviderLibrary.csproj">
       <Project>{f173f601-0d66-4ab3-af01-f90f070b361b}</Project>
       <Name>CustomLoggingProviderLibrary</Name>

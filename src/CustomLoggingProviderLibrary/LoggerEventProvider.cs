@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 
 namespace CustomLoggingProviderLibrary
 {
@@ -16,11 +17,25 @@ namespace CustomLoggingProviderLibrary
         /// </summary>
         /// <param name="applicationName">Name of the application to identify the log</param>
         /// <param name="minimumLevel">Minimum log level</param>
-        public static void Initialize(string applicationName, int minimumLevel)
+        public static void Initialize(int minimumLevel)
         {
-            _applicationName = applicationName;
+            _applicationName = GetCallerClassName();
             _logLevel = ParseLogLevel(minimumLevel);
-            _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(applicationName, _logLevel);
+            _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(_applicationName, _logLevel);
+        }
+
+        private static string GetCallerClassName()
+        {
+            try
+            {
+                StackTrace stackTrace = new StackTrace();
+                StackFrame frame = stackTrace.GetFrame(2);
+                return frame.GetMethod().DeclaringType.FullName;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
 
         private static LogLevel ParseLogLevel(int value)
@@ -35,16 +50,14 @@ namespace CustomLoggingProviderLibrary
 
         private string FormatLogMessage(string message) =>  $"[{_logLevel}] {_applicationName}: {message}";
 
-        private string FormatLogMessage(string message, string actionName) => $"[{_logLevel}] {_applicationName} - {actionName}: {message}";
-
         /// <summary>
         /// Write Info message
         /// </summary>
         /// <param name="message">Message for log</param>
         /// <param name="actioName">Name of the method called</param>
-        public void LogInfo(string message, string actioName = null) 
+        public void LogInfo(string message) 
         {
-            _logger?.LogInformation(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
+            _logger?.LogInformation(FormatLogMessage(message));
         }
 
         /// <summary>
@@ -54,7 +67,7 @@ namespace CustomLoggingProviderLibrary
         /// <param name="actioName">Name of the method called</param>
         public void LogError(string message, string actioName = null)
         {
-            _logger?.LogError(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
+            _logger?.LogError(FormatLogMessage(message));
         }
 
         /// <summary>
@@ -62,9 +75,9 @@ namespace CustomLoggingProviderLibrary
         /// </summary>
         /// <param name="message">Message for log</param>
         /// <param name="actioName">Name of the method called</param>
-        public void LogWarning(string message, string actioName = null)
+        public void LogWarning(string message)
         {
-            _logger?.LogWarning(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
+            _logger?.LogWarning(FormatLogMessage(message));
         }
 
         /// <summary>
@@ -72,9 +85,9 @@ namespace CustomLoggingProviderLibrary
         /// </summary>
         /// <param name="message">Message for log</param>
         /// <param name="actioName">Name of the method called</param>
-        public void LogDebug(string message, string actioName = null)
+        public void LogDebug(string message)
         {
-            _logger?.LogDebug(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
+            _logger?.LogDebug(FormatLogMessage(message));
         }
 
         /// <summary>
@@ -82,9 +95,9 @@ namespace CustomLoggingProviderLibrary
         /// </summary>
         /// <param name="message">Message for log</param>
         /// <param name="actioName">Name of the method called</param>
-        public void LogCritical(string message, string actioName = null)
+        public void LogCritical(string message)
         {   
-            _logger?.LogCritical(string.IsNullOrEmpty(actioName) ? FormatLogMessage(message) : FormatLogMessage(message, actioName));
+            _logger?.LogCritical(FormatLogMessage(message));
         }
     }
 }

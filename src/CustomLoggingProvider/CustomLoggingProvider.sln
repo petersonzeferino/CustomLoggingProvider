@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomLoggingProvider", "Cu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomLoggingProviderLibrary", "..\CustomLoggingProviderLibrary\CustomLoggingProviderLibrary.csproj", "{F173F601-0D66-4AB3-AF01-F90F070B361B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomLoggingProviderDomain", "..\CustomLoggingProviderDomain\CustomLoggingProviderDomain.csproj", "{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F173F601-0D66-4AB3-AF01-F90F070B361B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F173F601-0D66-4AB3-AF01-F90F070B361B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F173F601-0D66-4AB3-AF01-F90F070B361B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
