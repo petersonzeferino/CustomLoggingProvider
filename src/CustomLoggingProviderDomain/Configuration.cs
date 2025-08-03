@@ -11,7 +11,11 @@ namespace CustomLoggingProviderDomain
     {
         public static void Startup()
         {
-            LoggerEventProvider.Initialize(9);
+            LoggerEventProvider.Initialize(
+                                "CustomLoggingProviderDomain",
+                                  9,
+                            "Y");
+
             var _logger = new LoggerEventProvider();
 
             _logger.LogInfo("Test message for log info from Configuration");

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CustomLoggingProviderLibrary
 {
-    public class LoggerProviderFactory
+    internal class LoggerProviderFactory
     {
         private static ILoggerFactory _loggerFactory;
 
@@ -14,7 +14,7 @@ namespace CustomLoggingProviderLibrary
         /// <param name="applicationName">Application name to identify the log</param>
         /// <param name="logLevel">Minimum log level</param>
         /// <returns>Logger configured</returns>
-        public static ILogger<T> GetLogger<T>(string applicationName, LogLevel logLevel)
+        internal static ILogger<T> GetLogger<T>(string applicationName, LogLevel logLevel)
         {
             if (_loggerFactory == null)
             {
@@ -25,6 +25,7 @@ namespace CustomLoggingProviderLibrary
                         .AddEventLog(settings =>                        // Logs to the Event Viewer
                         {
                             settings.SourceName = applicationName;     // Source name displayed in the Event Viewer
+                            //settings.LogName = applicationName;        // Log name displayed in the Event Viewer
                         })
                         .SetMinimumLevel(logLevel);                    // Sets the minimum level
                 });

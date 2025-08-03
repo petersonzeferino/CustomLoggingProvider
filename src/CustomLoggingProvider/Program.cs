@@ -8,8 +8,13 @@ namespace CustomLoggingProvider
     {
         static void Main(string[] args)
         {
-            LoggerEventProvider.Initialize( 9);
+            LoggerEventProvider.Initialize(
+                                "CustomLoggingProvider", 
+                                  9);
+
             var _logger = new LoggerEventProvider();
+
+            _logger.LogInfo("This is a test message for Event Viewer.");
 
             _logger.LogInfo("Test message for log info");
             _logger.LogError("Test message for log error");
