@@ -13,8 +13,9 @@ namespace CustomLoggingProviderDomain
         {
             LoggerEventProvider.Initialize(
                                 "LoggingProvider",
-                                  9,
-                            "Y");
+                                "LoggingProvider",
+                               9,
+                              "Y");
 
             var _logger = new LoggerEventProvider();
 
