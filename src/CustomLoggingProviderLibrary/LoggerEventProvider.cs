@@ -234,6 +234,7 @@ namespace CustomLoggingProviderLibrary
         {
             WriteLogToFile(message);
             _logger?.LogInformation(FormatLogMessage(message));
+            //_logger?.LogInformation(new EventId(2001, "LoginSuccess"), FormatLogMessage(message));
         }
 
         /// <summary>
