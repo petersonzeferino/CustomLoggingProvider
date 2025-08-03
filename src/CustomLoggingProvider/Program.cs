@@ -9,7 +9,7 @@ namespace CustomLoggingProvider
         static void Main(string[] args)
         {
             LoggerEventProvider.Initialize(
-                                "CustomLoggingProvider", 
+                                "LoggingProvider", 
                                   9);
 
             var _logger = new LoggerEventProvider();

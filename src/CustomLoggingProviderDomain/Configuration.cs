@@ -12,7 +12,7 @@ namespace CustomLoggingProviderDomain
         public static void Startup()
         {
             LoggerEventProvider.Initialize(
-                                "CustomLoggingProviderDomain",
+                                "LoggingProvider",
                                   9,
                             "Y");
 

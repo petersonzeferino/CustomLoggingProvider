@@ -25,11 +25,11 @@ namespace CustomLoggingProviderLibrary
                                       int minimumLevel,
                                       string enableWriteLogToFile = "")
         {
-            _applicationName = applicationName + "123";
+            _applicationName = applicationName;
             _logLevel = ParseLogLevel(minimumLevel);
             _callerName = GetCallerClassName();
             _enableWriteLogToFile = enableWriteLogToFile;
-            EnsureEventLogSourceExists(_applicationName);
+            EnsureCustomEventLogExists(_applicationName, _applicationName);
             _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(_applicationName, _logLevel);
         }
 
@@ -51,61 +51,64 @@ namespace CustomLoggingProviderLibrary
         /// This operation requires administrative privileges.
         /// </summary>
         /// <param name="sourceName">The name of the source to register in the Event Log.</param>
-        public static void EnsureEventLogSourceExists(string sourceName)
-        {
-            try
-            {
-                // Check if the source exists, and create it if necessary
-                if (!EventLog.SourceExists(sourceName))
-                {
-                    EventLog.CreateEventSource(new EventSourceCreationData(sourceName, "Application"));
-
-                    // Optional: Write an initial log entry
-                    EventLog.WriteEntry(sourceName, "Event source created successfully.", EventLogEntryType.Information);
-                }
-            }
-            catch (SecurityException)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("❌ Administrator privileges are required to create an Event Log source.");
-                Console.WriteLine("➡️  Please run the application as Administrator and try again.");
-                Console.ResetColor();
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("❌ An unexpected error occurred while checking or creating the event log source:");
-                Console.WriteLine(ex.Message);
-                Console.ResetColor();
-            }
-        }
-
-        //public static void EnsureCustomEventLogExists(string sourceName, string logName)
+        //public static void EnsureEventLogSourceExists(string sourceName)
         //{
         //    try
         //    {
-        //        // Check if source exists and is correctly mapped
-        //        if (EventLog.SourceExists(sourceName))
+        //        // Check if the source exists, and create it if necessary
+        //        if (!EventLog.SourceExists(sourceName))
         //        {
-        //            var currentLogName = EventLog.LogNameFromSourceName(sourceName, ".");
-        //            if (!string.Equals(currentLogName, logName, StringComparison.OrdinalIgnoreCase))
-        //            {
-        //                Console.WriteLine($"❌ Source '{sourceName}' is already registered in log '{currentLogName}', not '{logName}'.");
-        //                return;
-        //            }
+        //            EventLog.CreateEventSource(new EventSourceCreationData(sourceName, "Application"));
+
+        //            // Optional: Write an initial log entry
+        //            EventLog.WriteEntry(sourceName, "Event source created successfully.", EventLogEntryType.Information);
         //        }
-        //        else
-        //        {
-        //            // Register the new source with the custom log name
-        //            EventLog.CreateEventSource(new EventSourceCreationData(sourceName, logName));
-        //            Console.WriteLine($"✅ Source '{sourceName}' created in log '{logName}'.");
-        //        }
+        //    }
+        //    catch (SecurityException)
+        //    {
+        //        Console.ForegroundColor = ConsoleColor.Red;
+        //        Console.WriteLine("❌ Administrator privileges are required to create an Event Log source.");
+        //        Console.WriteLine("➡️  Please run the application as Administrator and try again.");
+        //        Console.ResetColor();
         //    }
         //    catch (Exception ex)
         //    {
-        //        Console.WriteLine($"❌ Failed to create event log source: {ex.Message}");
+        //        Console.ForegroundColor = ConsoleColor.Red;
+        //        Console.WriteLine("❌ An unexpected error occurred while checking or creating the event log source:");
+        //        Console.WriteLine(ex.Message);
+        //        Console.ResetColor();
         //    }
         //}
+
+
+
+
+        public static void EnsureCustomEventLogExists(string sourceName, string logName)
+        {
+            try
+            {
+                // Check if source exists and is correctly mapped
+                if (EventLog.SourceExists(sourceName))
+                {
+                    var currentLogName = EventLog.LogNameFromSourceName(sourceName, ".");
+                    if (!string.Equals(currentLogName, logName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine($"❌ Source '{sourceName}' is already registered in log '{currentLogName}', not '{logName}'.");
+                        return;
+                    }
+                }
+                else
+                {
+                    // Register the new source with the custom log name
+                    EventLog.CreateEventSource(new EventSourceCreationData(sourceName, logName));
+                    Console.WriteLine($"✅ Source '{sourceName}' created in log '{logName}'.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Failed to create event log source: {ex.Message}");
+            }
+        }
 
         private static string GetCallerClassName()
         {

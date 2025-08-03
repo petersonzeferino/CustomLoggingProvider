@@ -14,7 +14,7 @@ namespace CustomLoggingProviderLibrary
         /// <param name="applicationName">Application name to identify the log</param>
         /// <param name="logLevel">Minimum log level</param>
         /// <returns>Logger configured</returns>
-        internal static ILogger<T> GetLogger<T>(string applicationName, LogLevel logLevel)
+        internal static ILogger<T> GetLogger<T>(string applicationName, LogLevel logLevel, string logName = "Application")
         {
             if (_loggerFactory == null)
             {
@@ -25,7 +25,7 @@ namespace CustomLoggingProviderLibrary
                         .AddEventLog(settings =>                        // Logs to the Event Viewer
                         {
                             settings.SourceName = applicationName;     // Source name displayed in the Event Viewer
-                            //settings.LogName = applicationName;        // Log name displayed in the Event Viewer
+                            settings.LogName = logName;        // Log name displayed in the Event Viewer
                         })
                         .SetMinimumLevel(logLevel);                    // Sets the minimum level
                 });
