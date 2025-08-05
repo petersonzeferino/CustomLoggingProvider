@@ -1,9 +1,6 @@
 ﻿using CustomLoggingProviderLibrary;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomLoggingProviderDomain
 {
@@ -11,15 +8,29 @@ namespace CustomLoggingProviderDomain
     {
         public static void Startup()
         {
-            LoggerEventProvider.Initialize(
-                                "LoggingProvider",
-                                "LoggingProvider",
-                               9,
-                              "Y");
+            if (!InitializeLogger())
+            {
+                Console.WriteLine("Logger initialization failed in Configuration.");
+                return;
+            }
 
-            var _logger = new LoggerEventProvider();
+            var logger = new LoggerEventProvider();
+            LogStartupMessage(logger);
+        }
 
-            _logger.LogInfo("Test message for log info from Configuration");
+        private static bool InitializeLogger()
+        {
+            return LoggerEventProvider.Initialize(
+                "LoggingProvider",
+                "LoggingProvider",
+                 LogLevel.Debug,
+                 true
+            );
+        }
+
+        private static void LogStartupMessage(LoggerEventProvider logger)
+        {
+            logger.LogInfo("Test message for log info from Configuration");
         }
     }
 }

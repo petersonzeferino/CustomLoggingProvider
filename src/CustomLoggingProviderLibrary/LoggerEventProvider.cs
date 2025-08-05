@@ -13,28 +13,39 @@ namespace CustomLoggingProviderLibrary
         private static string _callerName;
         private static string _applicationName;
         private static string _logName;
-        private static string _enableWriteLogToFile;
+        private static bool _enableWriteLogToFile;
 
         /// <summary>
         /// Initializes the global logger for the application
         /// Should be called only once at the start of the application
         /// </summary>
         /// <param name="applicationName">Name of the application to identify the log in the Event Viewer</param>
-        /// <param name="minimumLevel">Minimum log level</param>
-        /// <param name="enableWriteLogToFile">Enable file write logging and use the values ​​Y, N, 0, 1 to identify if it is enabled</param>
-        public static void Initialize(string applicationName,
-                                      string logName,
-                                      int minimumLevel,
-                                      string enableWriteLogToFile = "")
+        /// <param name="logMinimumLevel">Minimum log level</param>
+        /// <param name="enableWriteLogToFile">Enable file write logging to identify if it is enabled</param>
+        public static bool Initialize(string applicationName,
+                              string logName,
+                              LogLevel logMinimumLevel,
+                              bool enableWriteLogToFile = false)
         {
-            _applicationName = applicationName;
-            _logName = logName;
-            _logLevel = ParseLogLevel(minimumLevel);
-            _callerName = GetCallerClassName();
-            _enableWriteLogToFile = enableWriteLogToFile;           
-            _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(_applicationName, _logName, _logLevel);
+            try
+            {
+                _applicationName = applicationName;
+                _logName = logName;
+                _logLevel = logMinimumLevel;
+                _callerName = GetCallerClassName();
+                _enableWriteLogToFile = enableWriteLogToFile;
 
-            EnsureEventLogSource(_applicationName, _logName, true);
+                _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(_applicationName, _logName, _logLevel);
+
+                EnsureEventLogSource(_applicationName, _logName, true);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error to initialize the logger: {ex.Message}");
+                return false;
+            }
         }
 
         /// <summary>
@@ -184,21 +195,11 @@ namespace CustomLoggingProviderLibrary
             }
         }
 
-        private static LogLevel ParseLogLevel(int value)
-        {
-            if (Enum.IsDefined(typeof(LogLevel), value))
-            {
-                return (LogLevel)value;
-            }
-
-            return LogLevel.Trace;
-        }
-
         private string FormatLogMessage(string message) => $"[{_logLevel}] {_callerName}: {message}";
 
         private void WriteLogToFile(string message)
         {
-            if (ConvertToBool(_enableWriteLogToFile))
+            if (_enableWriteLogToFile)
             {
                 var loggerFileModel = new LoggerFileModel(message,
                                                           _applicationName,

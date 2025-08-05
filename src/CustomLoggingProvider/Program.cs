@@ -1,32 +1,46 @@
 ﻿using CustomLoggingProviderDomain;
 using CustomLoggingProviderLibrary;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace CustomLoggingProvider
 {
-    public  class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            LoggerEventProvider.Initialize(
-                                "LoggingProvider",
-                                "LoggingProvider",
-                               9,
-                              "Y");
 
-            var _logger = new LoggerEventProvider();
+            if (!InitializeLogger())
+            {
+                Console.WriteLine("Logger initialization failed in Configuration.");
+                return;
+            }
 
-            _logger.LogInfo("Test message for log info from Program");
-
-            _logger.LogInfo("Test message for log info");
-            _logger.LogError("Test message for log error");
-            _logger.LogWarning("Test message for log warning");
-            _logger.LogDebug("Test message for log debug");
-            _logger.LogCritical("Test message for log critical");
+            var logger = new LoggerEventProvider();
+            LogTestMessages(logger);
 
             Configuration.Startup();
 
-            Console.ReadLine();           
+            Console.ReadLine();
+        }
+
+        private static bool InitializeLogger()
+        {
+            return LoggerEventProvider.Initialize(
+                "LoggingProvider",
+                "LoggingProvider",
+                 LogLevel.Debug,
+                 true
+            );
+        }
+
+        private static void LogTestMessages(LoggerEventProvider logger)
+        {
+            logger.LogInfo("Test message for log info");
+            logger.LogError("Test message for log error");
+            logger.LogWarning("Test message for log warning");
+            logger.LogDebug("Test message for log debug");
+            logger.LogCritical("Test message for log critical");
         }
     }
 }
