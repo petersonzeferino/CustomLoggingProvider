@@ -1,4 +1,4 @@
-﻿
+﻿using CustomLoggingProviderLibrary.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
@@ -8,190 +8,49 @@ namespace CustomLoggingProviderLibrary
 {
     public class LoggerEventProvider
     {
-        private static ILogger _logger;
-        private static LogLevel _logLevel;
-        private static string _callerName;
-        private static string _applicationName;
-        private static string _logName;
-        private static bool _enableWriteLogToFile;
+        private readonly ILogger _logger;
+        private readonly LogLevel _logLevel;
+        private readonly string _applicationName;
+        private readonly string _logName;
+        private readonly bool _enableWriteLogToFile;
+        private readonly string _callerName;
+        private readonly EventLogHelper _eventLogHelper;
+        private readonly string _writeLogToFileFolderPath;
 
         /// <summary>
         /// Initializes the global logger for the application
         /// Should be called only once at the start of the application
         /// </summary>
         /// <param name="applicationName">Name of the application to identify the log in the Event Viewer</param>
-        /// <param name="logMinimumLevel">Minimum log level</param>
+        /// <param name="logName">Minimum log level</param>
+        /// <param name="logMinimumLevel">     </param>
         /// <param name="enableWriteLogToFile">Enable file write logging to identify if it is enabled</param>
-        public static bool Initialize(string applicationName,
-                              string logName,
-                              LogLevel logMinimumLevel,
-                              bool enableWriteLogToFile = false)
+        /// <param name="writeLogToFileFolderPath">      </param>
+        public LoggerEventProvider(string applicationName, string logName, LogLevel logMinimumLevel, bool enableWriteLogToFile = false, string writeLogToFileFolderPath = "")
         {
-            try
-            {
-                _applicationName = applicationName;
-                _logName = logName;
-                _logLevel = logMinimumLevel;
-                _callerName = GetCallerClassName();
-                _enableWriteLogToFile = enableWriteLogToFile;
+            _applicationName = applicationName;
+            _logName = logName;
+            _logLevel = logMinimumLevel;
+            _enableWriteLogToFile = enableWriteLogToFile;
+            _callerName = GetCallerClassName();
+            _writeLogToFileFolderPath = writeLogToFileFolderPath;
 
-                _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(_applicationName, _logName, _logLevel);
+            _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(_applicationName, _logName, _logLevel);
 
-                EnsureEventLogSource(_applicationName, _logName, true);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error to initialize the logger: {ex.Message}");
-                return false;
-            }
+            _eventLogHelper = new EventLogHelper();
+            _eventLogHelper.EnsureEventLogSource(_applicationName, _logName, writeTestEntry: true);
         }
 
-        /// <summary>
-        /// Ensures that the specified Event Log source exists. 
-        /// If it does not, attempts to create it in the "Application" log.
-        /// This operation requires administrative privileges.
-        /// </summary>
-        /// <param name="sourceName">The name of the source to register in the Event Log.</param>
-        /// <summary>
-        /// Ensures that the specified Event Log source exists.
-        /// If it does not, attempts to create it in the "Application" log.
-        /// This operation requires administrative privileges.
-        /// </summary>
-        /// <param name="sourceName">The name of the source to register in the Event Log.</param>
-        /// <summary>
-        /// Ensures that the specified Event Log source exists.
-        /// If it does not, attempts to create it in the "Application" log.
-        /// This operation requires administrative privileges.
-        /// </summary>
-        /// <param name="sourceName">The name of the source to register in the Event Log.</param>
-        //public static void EnsureEventLogSourceExists(string sourceName)
-        //{
-        //    try
-        //    {
-        //        // Check if the source exists, and create it if necessary
-        //        if (!EventLog.SourceExists(sourceName))
-        //        {
-        //            EventLog.CreateEventSource(new EventSourceCreationData(sourceName, "Application"));
-
-        //            // Optional: Write an initial log entry
-        //            EventLog.WriteEntry(sourceName, "Event source created successfully.", EventLogEntryType.Information);
-        //        }
-        //    }
-        //    catch (SecurityException)
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine("❌ Administrator privileges are required to create an Event Log source.");
-        //        Console.WriteLine("➡️  Please run the application as Administrator and try again.");
-        //        Console.ResetColor();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine("❌ An unexpected error occurred while checking or creating the event log source:");
-        //        Console.WriteLine(ex.Message);
-        //        Console.ResetColor();
-        //    }
-        //}
-
-
-
-
-        //public static void EnsureCustomEventLogExists(string sourceName, string logName)
-        //{
-        //    try
-        //    {
-        //        // Check if source exists and is correctly mapped
-        //        if (EventLog.SourceExists(sourceName))
-        //        {
-        //            var currentLogName = EventLog.LogNameFromSourceName(sourceName, ".");
-        //            if (!string.Equals(currentLogName, logName, StringComparison.OrdinalIgnoreCase))
-        //            {
-        //                Console.WriteLine($"❌ Source '{sourceName}' is already registered in log '{currentLogName}', not '{logName}'.");
-        //                return;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // Register the new source with the custom log name
-        //            EventLog.CreateEventSource(new EventSourceCreationData(sourceName, logName));
-        //            Console.WriteLine($"✅ Source '{sourceName}' created in log '{logName}'.");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"❌ Failed to create event log source: {ex.Message}");
-        //    }
-        //}
-
-
-
-        /// <summary>
-        /// Ensures that the specified Event Log source is registered in the given log.
-        /// If it doesn't exist, creates it and optionally writes a test log entry.
-        /// </summary>
-        /// <param name="sourceName">The name of the source to use.</param>
-        /// <param name="logName">The log name to associate with the source (default is "Application").</param>
-        /// <param name="writeTestEntry">If true, writes a test message to the event log after creating it.</param>
-        public static void EnsureEventLogSource(string sourceName, string logName = "Application", bool writeTestEntry = true)
+        private string GetCallerClassName()
         {
             try
             {
-                if (EventLog.SourceExists(sourceName))
-                {
-                    string currentLog = EventLog.LogNameFromSourceName(sourceName, ".");
-
-                    if (!string.Equals(currentLog, logName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"❌ Source '{sourceName}' is already registered in log '{currentLog}', not '{logName}'.");
-                        Console.WriteLine("➡️  You must delete the existing source or use a different source name.");
-                        Console.ResetColor();
-                        return;
-                    }
-
-                    Console.WriteLine($"✅ Source '{sourceName}' is already correctly registered in log '{logName}'.");
-                }
-                else
-                {
-                    EventLog.CreateEventSource(new EventSourceCreationData(sourceName, logName));
-                    Console.WriteLine($"✅ Source '{sourceName}' created and linked to log '{logName}'.");
-
-                    if (writeTestEntry)
-                    {
-                        EventLog.WriteEntry(sourceName, "Event source created successfully.", EventLogEntryType.Information);
-                        Console.WriteLine($"ℹ️  Test log entry written to '{logName}' with source '{sourceName}'.");
-                    }
-                }
+                var frame = new StackTrace().GetFrame(2);
+                return frame?.GetMethod()?.DeclaringType?.FullName ?? "UnknownCaller";
             }
-            catch (SecurityException)
+            catch
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("❌ Administrator privileges are required to create or modify Event Log sources.");
-                Console.WriteLine("➡️  Please run the application as Administrator and try again.");
-                Console.ResetColor();
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"❌ Unexpected error while checking or creating the event log source:");
-                Console.WriteLine(ex.Message);
-                Console.ResetColor();
-            }
-        }
-
-        private static string GetCallerClassName()
-        {
-            try
-            {
-                StackTrace stackTrace = new StackTrace();
-                StackFrame frame = stackTrace.GetFrame(2);
-                return frame.GetMethod().DeclaringType.FullName;
-            }
-            catch (Exception)
-            {
-                return string.Empty;
+                return "UnknownCaller";
             }
         }
 
@@ -201,28 +60,8 @@ namespace CustomLoggingProviderLibrary
         {
             if (_enableWriteLogToFile)
             {
-                var loggerFileModel = new LoggerFileModel(message,
-                                                          _applicationName,
-                                           "",
-                                       "F:\\Temp\\");
-
+                var loggerFileModel = new LoggerFileModel(message, _applicationName, "", _writeLogToFileFolderPath);
                 LoggerFileProvider.WriteToLog(loggerFileModel);
-            }
-        }
-
-        private bool ConvertToBool(string value)
-        {
-            if (value == "1" || value.Equals("Y", StringComparison.OrdinalIgnoreCase) || value.Equals("true", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-            else if (value == "0" || value.Equals("N", StringComparison.OrdinalIgnoreCase) || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-            else
-            {
-                return false;
             }
         }
 
@@ -235,7 +74,6 @@ namespace CustomLoggingProviderLibrary
         {
             WriteLogToFile(message);
             _logger?.LogInformation(FormatLogMessage(message));
-            //_logger?.LogInformation(new EventId(2001, "LoginSuccess"), FormatLogMessage(message));
         }
 
         /// <summary>
@@ -243,11 +81,12 @@ namespace CustomLoggingProviderLibrary
         /// </summary>
         /// <param name="message">Message for log</param>
         /// <param name="actioName">Name of the method called</param>
-        public void LogError(string message, string actioName = null)
+        public void LogError(string message)
         {
             WriteLogToFile(message);
             _logger?.LogError(FormatLogMessage(message));
         }
+
 
         /// <summary>
         /// Write Warning message
@@ -271,6 +110,7 @@ namespace CustomLoggingProviderLibrary
             _logger?.LogDebug(FormatLogMessage(message));
         }
 
+
         /// <summary>
         /// Write Critical message
         /// </summary>
@@ -283,5 +123,3 @@ namespace CustomLoggingProviderLibrary
         }
     }
 }
-
-

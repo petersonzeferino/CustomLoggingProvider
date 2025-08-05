@@ -4,33 +4,18 @@ using System;
 
 namespace CustomLoggingProviderDomain
 {
-    public static class Configuration
+    public class Configuration
     {
-        public static void Startup()
+        public Configuration()
         {
-            if (!InitializeLogger())
-            {
-                Console.WriteLine("Logger initialization failed in Configuration.");
-                return;
-            }
-
-            var logger = new LoggerEventProvider();
+            var logger = new LoggerEventProvider("LoggingProvider", "LoggingProvider", LogLevel.Debug);
             LogStartupMessage(logger);
         }
 
-        private static bool InitializeLogger()
-        {
-            return LoggerEventProvider.Initialize(
-                "LoggingProvider",
-                "LoggingProvider",
-                 LogLevel.Debug,
-                 true
-            );
-        }
-
-        private static void LogStartupMessage(LoggerEventProvider logger)
+        private void LogStartupMessage(LoggerEventProvider logger)
         {
             logger.LogInfo("Test message for log info from Configuration");
         }
     }
+
 }

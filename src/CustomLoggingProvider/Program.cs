@@ -9,32 +9,18 @@ namespace CustomLoggingProvider
     {
         static void Main(string[] args)
         {
+            var program = new Program();
 
-            if (!InitializeLogger())
-            {
-                Console.WriteLine("Logger initialization failed in Configuration.");
-                return;
-            }
+            var logger = new LoggerEventProvider("LoggingProvider", "LoggingProvider", LogLevel.Debug, true, "F:\\Temp\\");
 
-            var logger = new LoggerEventProvider();
-            LogTestMessages(logger);
+            program.LogTestMessages(logger);
 
-            Configuration.Startup();
+            new Configuration();
 
             Console.ReadLine();
         }
 
-        private static bool InitializeLogger()
-        {
-            return LoggerEventProvider.Initialize(
-                "LoggingProvider",
-                "LoggingProvider",
-                 LogLevel.Debug,
-                 true
-            );
-        }
-
-        private static void LogTestMessages(LoggerEventProvider logger)
+        public void LogTestMessages(LoggerEventProvider logger)
         {
             logger.LogInfo("Test message for log info");
             logger.LogError("Test message for log error");

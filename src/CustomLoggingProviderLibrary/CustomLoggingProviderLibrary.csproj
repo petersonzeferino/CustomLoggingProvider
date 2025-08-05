@@ -116,6 +116,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\EventLogHelper.cs" />
     <Compile Include="LoggerEventProvider.cs" />
     <Compile Include="LoggerFileModel.cs" />
     <Compile Include="LoggerFileProvider.cs" />

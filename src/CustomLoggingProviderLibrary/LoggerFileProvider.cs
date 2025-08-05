@@ -18,7 +18,7 @@ namespace CustomLoggingProviderLibrary
         {
             try
             {
-                string logFilePath = $"{loggerFile.ProcessEventsLogFolder}{loggerFile.ApplicationName}Log.txt";
+                string logFilePath = $"{loggerFile.WriteLogToFileFolderPath}{loggerFile.ApplicationName}Log.txt";
                 BackUpLogFile(logFilePath, loggerFile);
 
                 string content = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss")+ "\t";
@@ -32,7 +32,7 @@ namespace CustomLoggingProviderLibrary
             }
             catch (Exception ex)
             {
-                string logFilePath = $"{loggerFile.ProcessEventsLogFolder}{loggerFile.ApplicationName}ErrorLog.txt";
+                string logFilePath = $"{loggerFile.WriteLogToFileFolderPath}{loggerFile.ApplicationName}ErrorLog.txt";
 
                 string content = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss")+ "\t";
                 if (!string.IsNullOrEmpty(loggerFile.MachineIdentifier))

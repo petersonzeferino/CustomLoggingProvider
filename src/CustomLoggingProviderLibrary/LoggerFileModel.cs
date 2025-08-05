@@ -11,16 +11,16 @@ namespace CustomLoggingProviderLibrary
         public string Message { get; set; }
         public string ApplicationName { get; set; } 
         public string MachineIdentifier { get; private set; }
-        public string ProcessEventsLogFolder { get; private set; }
+        public string WriteLogToFileFolderPath { get; private set; }
         public bool EnableClearFileContent { get; private set; } = false;
         public DateTime BackupLogTime { get; private set; }
 
-        public LoggerFileModel(string message, string applicationName, string machineIdentifier, string processEventsLogFolder)
+        public LoggerFileModel(string message, string applicationName, string machineIdentifier, string writeLogToFileFolderPath)
         {
             Message = message;
             ApplicationName = applicationName;
             MachineIdentifier = machineIdentifier;
-            ProcessEventsLogFolder = processEventsLogFolder;
+            WriteLogToFileFolderPath = writeLogToFileFolderPath;
         }
 
         public void SetClearFileContent(bool isEnable)
