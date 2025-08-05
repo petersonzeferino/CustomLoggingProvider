@@ -1,6 +1,5 @@
 ﻿using CustomLoggingProviderLibrary;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace CustomLoggingProviderDomain
 {
