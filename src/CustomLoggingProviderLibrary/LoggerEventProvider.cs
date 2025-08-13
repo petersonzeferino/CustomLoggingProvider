@@ -62,8 +62,11 @@ namespace CustomLoggingProviderLibrary
 
             _logger = LoggerProviderFactory.GetLogger<LoggerEventProvider>(_applicationName, _logName, _logLevel);
 
+            var excludedLevels = new[] { LogLevel.Warning, LogLevel.Error, LogLevel.Critical };
+            bool writeTestEntry = !excludedLevels.Contains(_logLevel);
+
             _eventLogHelper = new EventLogHelper();
-            _eventLogHelper.EnsureEventLogSource(_applicationName, _logName, writeTestEntry: true, _writeLogToFileFolderPath);
+            _eventLogHelper.EnsureEventLogSource(_applicationName, _logName, writeTestEntry, _writeLogToFileFolderPath);
         }
 
         /// <summary>
