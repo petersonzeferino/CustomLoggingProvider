@@ -11,7 +11,7 @@ namespace CustomLoggingProvider
         {
             var program = new Program();
 
-            var logger = new LoggerEventProvider("LoggingProvider", "LoggingProvider", LogLevel.Debug, true, "F:\\Temp\\");
+            var logger = new LoggerEventProvider("LoggingProvider", "LoggingProvider", LogLevel.Debug, true, "F:\\Temp");
 
             program.LogTestMessages(logger);
 

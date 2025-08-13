@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomLoggingProviderLibrar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomLoggingProviderDomain", "..\CustomLoggingProviderDomain\CustomLoggingProviderDomain.csproj", "{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomLoggingProviderDAO", "..\CustomLoggingProviderDAO\CustomLoggingProviderDAO.csproj", "{CABE6515-97AF-40E2-917F-BF3AF6EA9C68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomLoggingProviderDAOTest", "..\CustomLoggingProviderDAOTest\CustomLoggingProviderDAOTest.csproj", "{A30C9124-CA50-426C-B3C7-A4A3C0856BE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6C09C86-DCAD-4A09-8BB4-CEEB966F9226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CABE6515-97AF-40E2-917F-BF3AF6EA9C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CABE6515-97AF-40E2-917F-BF3AF6EA9C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CABE6515-97AF-40E2-917F-BF3AF6EA9C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CABE6515-97AF-40E2-917F-BF3AF6EA9C68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A30C9124-CA50-426C-B3C7-A4A3C0856BE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A30C9124-CA50-426C-B3C7-A4A3C0856BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A30C9124-CA50-426C-B3C7-A4A3C0856BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A30C9124-CA50-426C-B3C7-A4A3C0856BE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
